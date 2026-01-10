@@ -98,7 +98,7 @@ export default function Sales() {
 
         <button
           type="submit"
-          className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
+          className="w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-100 transition"
         >
           Registrar Venda
         </button>

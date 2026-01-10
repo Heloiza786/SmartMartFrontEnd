@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react'
 import type { Product, ProductCreate } from '../types/product'
+import type { Category } from '../types/category'
 import {
   getProducts,
   createProduct,
   deleteProduct,
 } from '../services/products.service'
+import { getCategories } from '../services/categories.service'
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
 
   const [form, setForm] = useState<ProductCreate>({
     name: '',
-    price: 0,
+    price: '',
     description: '',
     brand: '',
     category_id: 0,
   })
+
 
   const loadProducts = async () => {
     const data = await getProducts()
@@ -24,34 +28,50 @@ export default function Products() {
     setLoading(false)
   }
 
+  
+  const loadCategories = async () => {
+    const data = await getCategories()
+    setCategories(data)
+  }
+
   useEffect(() => {
     loadProducts()
+    loadCategories()
   }, [])
 
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
     setForm(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'category_id'
-        ? Number(value)
-        : value,
+      [name]: value,
     }))
   }
 
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await createProduct(form)
+
+    await createProduct({
+      ...form,
+      price: Number(form.price.toString().replace(',', '.')), 
+      category_id: Number(form.category_id),
+    })
+
+
     setForm({
       name: '',
-      price: 0,
+      price: '',
       description: '',
       brand: '',
       category_id: 0,
     })
+
     loadProducts()
   }
+
 
   const handleDelete = async (id: number) => {
     if (confirm('Deseja excluir este produto?')) {
@@ -66,7 +86,7 @@ export default function Products() {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Produtos</h1>
 
-      {/* FORM */}
+
       <form
         onSubmit={handleSubmit}
         className="bg-white p-4 rounded-xl shadow mb-6 space-y-3"
@@ -80,9 +100,8 @@ export default function Products() {
           required
         />
 
+       
         <input
-          type="number"
-          step="0.01"
           name="price"
           placeholder="Preço"
           value={form.price}
@@ -107,15 +126,23 @@ export default function Products() {
           className="w-full border p-2 rounded"
         />
 
-        <input
-          type="number"
+        
+        <select
           name="category_id"
-          placeholder="ID da categoria"
           value={form.category_id}
           onChange={handleChange}
           className="w-full border p-2 rounded"
           required
-        />
+        >
+          <option value={0} disabled>
+            Selecione a categoria
+          </option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
 
         <button
           type="submit"
@@ -125,7 +152,7 @@ export default function Products() {
         </button>
       </form>
 
-      {/* LISTA */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {products.map(product => (
           <div
@@ -139,7 +166,7 @@ export default function Products() {
                 R$ {product.price.toFixed(2)}
               </p>
               <p className="text-xs text-gray-500">
-                Categoria ID: {product.category_id}
+                Categoria: {categories.find(c => c.id === product.category_id)?.name || product.category_id}
               </p>
             </div>
 
