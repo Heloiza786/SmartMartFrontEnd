@@ -3,7 +3,7 @@ import { ShoppingCart, Folder, DollarSign } from 'lucide-react'
 
 export function HomeActions() {
   return (
-    <div className="flex flex-col sm:flex-row gap-4 mt-4">
+    <div className="flex flex-col sm:flex-row gap-4 mt-4 ">
       <Link
         to="/produtos"
         className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-700 transition"
