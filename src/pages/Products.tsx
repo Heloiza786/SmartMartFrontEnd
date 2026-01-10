@@ -7,11 +7,13 @@ import {
   deleteProduct,
 } from '../services/products.service'
 import { getCategories } from '../services/categories.service'
+import { SuccessMessage } from '../components/SucessMessage'
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
+  const [success, setSuccess] = useState(false)
 
   const [form, setForm] = useState<ProductCreate>({
     name: '',
@@ -21,14 +23,12 @@ export default function Products() {
     category_id: 0,
   })
 
-
   const loadProducts = async () => {
     const data = await getProducts()
     setProducts(data)
     setLoading(false)
   }
 
-  
   const loadCategories = async () => {
     const data = await getCategories()
     setCategories(data)
@@ -39,9 +39,10 @@ export default function Products() {
     loadCategories()
   }, [])
 
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target
     setForm(prev => ({
@@ -50,16 +51,14 @@ export default function Products() {
     }))
   }
 
- 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     await createProduct({
       ...form,
-      price: Number(form.price.toString().replace(',', '.')), 
+      price: Number(form.price.toString().replace(',', '.')),
       category_id: Number(form.category_id),
     })
-
 
     setForm({
       name: '',
@@ -69,9 +68,11 @@ export default function Products() {
       category_id: 0,
     })
 
+    setSuccess(true)
     loadProducts()
-  }
 
+    setTimeout(() => setSuccess(false), 3000)
+  }
 
   const handleDelete = async (id: number) => {
     if (confirm('Deseja excluir este produto?')) {
@@ -86,6 +87,11 @@ export default function Products() {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Produtos</h1>
 
+      {success && (
+        <div className="mb-4">
+          <SuccessMessage message="Produto cadastrado com sucesso!" />
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -100,7 +106,6 @@ export default function Products() {
           required
         />
 
-       
         <input
           name="price"
           placeholder="Preço"
@@ -126,7 +131,6 @@ export default function Products() {
           className="w-full border p-2 rounded"
         />
 
-        
         <select
           name="category_id"
           value={form.category_id}
@@ -152,7 +156,6 @@ export default function Products() {
         </button>
       </form>
 
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {products.map(product => (
           <div
@@ -166,7 +169,9 @@ export default function Products() {
                 R$ {product.price.toFixed(2)}
               </p>
               <p className="text-xs text-gray-500">
-                Categoria: {categories.find(c => c.id === product.category_id)?.name || product.category_id}
+                Categoria:{' '}
+                {categories.find(c => c.id === product.category_id)?.name ||
+                  product.category_id}
               </p>
             </div>
 
