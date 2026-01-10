@@ -3,10 +3,13 @@ import type { Sale, SaleCreate } from '../types/sale'
 import type { Product } from '../types/product'
 import { getSales, createSale, deleteSale } from '../services/sales.service'
 import { getProducts } from '../services/products.service'
+import { SuccessMessage } from '../components/SucessMessage'
 
 export default function Sales() {
   const [sales, setSales] = useState<Sale[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [success, setSuccess] = useState(false)
+
   const [form, setForm] = useState<SaleCreate>({
     product_id: 0,
     sale_date: '',
@@ -14,13 +17,11 @@ export default function Sales() {
     total_price: 0,
   })
 
- 
   const loadSales = async () => {
     const data = await getSales()
     setSales(data)
   }
 
-  
   const loadProducts = async () => {
     const data = await getProducts()
     setProducts(data)
@@ -31,7 +32,6 @@ export default function Sales() {
     loadProducts()
   }, [])
 
-  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -54,14 +54,20 @@ export default function Sales() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     await createSale(form)
+
     setForm({
       product_id: 0,
       sale_date: '',
       quantity: 1,
       total_price: 0,
     })
+
+    setSuccess(true)
     loadSales()
+
+    setTimeout(() => setSuccess(false), 3000)
   }
 
   const handleDelete = async (id: number) => {
@@ -75,12 +81,16 @@ export default function Sales() {
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Vendas</h1>
 
-   
+      {success && (
+        <div className="mb-4">
+          <SuccessMessage message="Venda registrada com sucesso!" />
+        </div>
+      )}
+
       <form
         onSubmit={handleSubmit}
         className="bg-white p-4 rounded-xl shadow mb-6 space-y-3"
       >
-       
         <select
           name="product_id"
           value={form.product_id}
@@ -96,7 +106,6 @@ export default function Sales() {
           ))}
         </select>
 
-     
         <input
           type="date"
           name="sale_date"
@@ -106,7 +115,6 @@ export default function Sales() {
           required
         />
 
-      
         <input
           type="number"
           name="quantity"
@@ -122,7 +130,6 @@ export default function Sales() {
           type="number"
           step="0.01"
           name="total_price"
-          placeholder="Preço total"
           value={form.total_price.toFixed(2)}
           className="w-full border p-2 rounded bg-gray-100"
           readOnly
@@ -136,7 +143,6 @@ export default function Sales() {
         </button>
       </form>
 
-  
       <ul className="space-y-3">
         {sales.map(sale => (
           <li
