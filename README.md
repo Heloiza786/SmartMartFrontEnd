@@ -8,9 +8,9 @@ npm run dev
 
 acesse de forma local:
 http://localhost:5173/
-![HomePage==](home.png)
+![HomePage==](public\img\home.png)
 
 
-![Produto==](product.png)
+![Produto==](public\img\product.png)
 
-![Sale==](sale.png)
+![Sale==](public\img\sale.png)
