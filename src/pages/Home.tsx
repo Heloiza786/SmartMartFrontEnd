@@ -1,6 +1,7 @@
 import { HomeText } from '../components/HomeText'
 import { HomeActions } from '../components/HomeActions'
 import { HomeImage } from '../components/HomeImage'
+import { ButtomGraphic } from '../components/ButtomGraphic'
 
 export default function HomePage() {
   return (
@@ -10,6 +11,7 @@ export default function HomePage() {
       <div className="flex flex-col gap-6 max-w-lg ml-20">
         <HomeText />
         <HomeActions />
+        <ButtomGraphic />
       </div>
 
       
