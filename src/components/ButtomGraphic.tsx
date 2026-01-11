@@ -6,7 +6,7 @@ export function ButtomGraphic() {
     <div className="flex flex-col sm:flex-row gap-4 mt-4">
       <Link
         to="/chartHome"
-        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-700 transition"
+        className="flex items-center gap-2 px-6 py-3 rounded-xl bg-pink-500 text-white font-semibold hover:bg-pink-400 transition"
       >
         <BarChart3 className="w-5 h-5" />
         Gráfico
