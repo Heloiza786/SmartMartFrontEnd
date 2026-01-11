@@ -1,6 +1,7 @@
 ## Passo a passo para utilização
 
-1. Inicie baixando as dependencias:
+1. Inicie baixando as dependências(certifique-se se o node.js já esta instalo):
+```bash
 npm install
 ```
 
@@ -12,10 +13,11 @@ npm run dev
 3. Acesse de forma local:
 ```
 http://localhost:5173/
-![HomePage==](home.png)
+```
 
-![HomePage](public/img/home.png)
+## Screenshots
 
+![Home](public/img/home.png)
 ![Produto](public/img/product.png)
-
-![Sale==](sale.png)
+![Sale](public/img/sale.png)
+![Chart](public/img/graphcs.PNG)
